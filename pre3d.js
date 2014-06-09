@@ -621,6 +621,8 @@ var Pre3d = (function() {
 
     this.normal1_rgba = null;
     this.normal2_rgba = null;
+    
+    this.identityAffine = makeIdentityAffine();
 
     this.canvas = canvas_element;
     this.ctx = canvas_element.getContext('2d');
@@ -1060,6 +1062,17 @@ var Pre3d = (function() {
     } else {
       ctx.stroke();
     }
+  };
+  
+  // Useful for figuring out where to render HUD elements, cursor effects and text overlays for instance...
+  Renderer.prototype.screenPoint = function screenPoint(point) {
+    var t = multiplyAffine(this.camera.transform.m,
+                           this.identityAffine);
+
+    var screen_point = this.projectPointToCanvas(
+        transformPoint(t, point));
+        
+    return screen_point;
   };
 
   return {
